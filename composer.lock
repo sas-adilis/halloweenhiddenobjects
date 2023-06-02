@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "f7cdfb764fb10b4ae022c38bf11f4cfe",
+    "packages": [
+        {
+            "name": "adilis/hiddenobjects",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sas-adilis/hiddenobjects.git",
+                "reference": "9522ed4a355f444574df5311774f3065183913a0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sas-adilis/hiddenobjects/zipball/9522ed4a355f444574df5311774f3065183913a0",
+                "reference": "9522ed4a355f444574df5311774f3065183913a0",
+                "shasum": ""
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.16"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Adilis\\HiddenObjects\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "sas-adilis",
+                    "email": "contact@adilis.fr"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/sas-adilis/hiddenobjects/issues",
+                "source": "https://github.com/sas-adilis/hiddenobjects/tree/main"
+            },
+            "time": "2023-05-26T08:06:00+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "adilis/hiddenobjects": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
+}
