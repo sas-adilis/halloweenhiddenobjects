@@ -3,7 +3,7 @@
         'name' => 'adilis/halloweenhiddenobjects',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '2e9454b23c673db4a2474098a92b7e628ea209e5',
+        'reference' => '945122d5b3bc492508713e8b8f41e11652edda13',
         'type' => 'prestashop-module',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'adilis/halloweenhiddenobjects' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '2e9454b23c673db4a2474098a92b7e628ea209e5',
+            'reference' => '945122d5b3bc492508713e8b8f41e11652edda13',
             'type' => 'prestashop-module',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'adilis/hiddenobjects' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9522ed4a355f444574df5311774f3065183913a0',
+            'reference' => '1aae8ff8de547837a5c8eecb43314b10aeecf36b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../adilis/hiddenobjects',
             'aliases' => array(

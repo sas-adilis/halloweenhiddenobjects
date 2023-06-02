@@ -12,7 +12,6 @@ use Adilis\HiddenObjects\Controllers\Admin\AdminHiddenObjectsController;
  *  @copyright 2016 SAS Adilis
  *  @license   http://www.adilis.fr
  */
-
 class AdminHWHiddenObjectsController extends AdminHiddenObjectsController
 {
 }

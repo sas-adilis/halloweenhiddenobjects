@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+<?php
+
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 /**
  * 2016 Adilis
@@ -17,9 +19,9 @@ use Adilis\HiddenObjects\Sql\TableInstaller;
 
 /**
  * @property $module_name
+ *
  * @noinspection PhpMultipleClassDeclarationsInspection
  */
-
 class ModuleHiddenObjects extends \Module
 {
     public static $contests = false;
@@ -38,7 +40,7 @@ class ModuleHiddenObjects extends \Module
         $this->need_instance = 0;
         $this->bootstrap = true;
         $this->module_key = $this->getModuleKey();
-        $this->ps_versions_compliancy = array('min' => '1.6.1', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = ['min' => '1.6.1', 'max' => _PS_VERSION_];
         $this->author = 'Adilis';
         $this->tab = 'pricing_promotion';
         $this->name = $this->getName();
@@ -48,7 +50,6 @@ class ModuleHiddenObjects extends \Module
         require_once _PS_MODULE_DIR_ . $this->getName() . '/classes/' . $this->getPrefix() . 'HiddenObject.php';
 
         parent::__construct();
-
 
         $folders_need_permissions = [
             $this->getIconsDir() . '64/',
@@ -82,10 +83,9 @@ class ModuleHiddenObjects extends \Module
             ];
         } else {
             $jquery_selectors = [
-                "#products .product-miniature .thumbnail-container img"
+                '#content-wrapper .product-miniature .thumbnail-container img',
             ];
         }
-
 
         \Configuration::updateValue($this->getPrefix() . 'HIDDENOBJECTS_VERSION', $this->version);
         \Configuration::updateValue($this->getPrefix() . 'HIDDENOBJECTS_SELECTOR', implode(', ', $jquery_selectors));
@@ -101,7 +101,6 @@ class ModuleHiddenObjects extends \Module
             && $this->registerHook('displayHeader')
             && $this->registerHook('displayShoppingCartFooter');
     }
-
 
     public function uninstall(): bool
     {
@@ -125,7 +124,8 @@ class ModuleHiddenObjects extends \Module
         }
         $tab->class_name = $this->controller_name;
         $tab->module = $this->name;
-        $tab->id_parent = \Tab::getIdFromClassName('AdminPriceRule');
+        $tab->id_parent = -1;
+
         return $tab->save();
     }
 
@@ -141,6 +141,7 @@ class ModuleHiddenObjects extends \Module
                 return false;
             }
         }
+
         return true;
     }
 
@@ -150,9 +151,10 @@ class ModuleHiddenObjects extends \Module
     public function setModuleInFirst($hook_name): bool
     {
         $id_hook = \Hook::getIdByName($hook_name);
-        if ((int)$id_hook) {
+        if ((int) $id_hook) {
             return $this->updatePosition($id_hook, 0, 1);
         }
+
         return true;
     }
 
@@ -170,9 +172,9 @@ class ModuleHiddenObjects extends \Module
 
         if (!file_exists($src_dist)) {
             if (
-                !is_dir($this->getIconsDir() . $size) ||
-                !is_writable($this->getIconsDir() . $size) ||
-                !\ImageManager::resize($src_file, $src_dist, $size, $size, 'png')
+                !is_dir($this->getIconsDir() . $size)
+                || !is_writable($this->getIconsDir() . $size)
+                || !\ImageManager::resize($src_file, $src_dist, $size, $size, 'png')
             ) {
                 return false;
             }
@@ -186,8 +188,8 @@ class ModuleHiddenObjects extends \Module
      */
     public function getContests()
     {
-        $id_shop = (int)\Context::getContext()->shop->id;
-        $id_lang = (int)\Context::getContext()->cookie->id_lang;
+        $id_shop = (int) \Context::getContext()->shop->id;
+        $id_lang = (int) \Context::getContext()->cookie->id_lang;
 
         $query = new \DbQuery();
         $query->select('a.*, b.*');
@@ -197,7 +199,7 @@ class ModuleHiddenObjects extends \Module
         $query->where('b.id_lang = ' . $id_lang);
         $query->where('a.active = 1');
         $query->where(HOTools::buildOrWhere(['NOW() BETWEEN date_start AND date_end', 'date_start = date_end']));
-        $query->where('('.$this->getRenewQuery().') < a.how_many');
+        $query->where('(' . $this->getRenewQuery() . ') < a.how_many');
         $contests = \Db::getInstance()->executeS($query);
 
         if (!$contests) {
@@ -210,10 +212,11 @@ class ModuleHiddenObjects extends \Module
     /**
      * @throws \PrestaShopException
      */
-    private function getRenewQuery() {
+    private function getRenewQuery()
+    {
         $query = new \DbQuery();
         $query->select('COUNT(id_hiddenobject)');
-        $query->from($this->getTable().'_founded', 'c');
+        $query->from($this->getTable() . '_founded', 'c');
         $query->where('c.id_hiddenobject = a.id_hiddenobject');
         $query->where('c.is_test = 0');
         $query->where('c.date > CASE
@@ -223,6 +226,7 @@ class ModuleHiddenObjects extends \Module
             ELSE 0000-00-00
             END'
         );
+
         return $query->build();
     }
 
@@ -238,7 +242,7 @@ class ModuleHiddenObjects extends \Module
         $query->select('a.*');
         $query->from($this->getTable(), 'a');
         $query->where('a.active = 1');
-        $query->where('a.id_shop = ' . (int)$context->shop->id);
+        $query->where('a.id_shop = ' . (int) $context->shop->id);
         $query->where(HOTools::buildOrWhere(['NOW() BETWEEN date_start AND date_end', 'date_start = date_end']));
 
         $orWhere = ['restriction = "none"'];
@@ -271,13 +275,13 @@ class ModuleHiddenObjects extends \Module
             }
 
             $query->leftJoin(
-                $this->getTable().'_founded',
+                $this->getTable() . '_founded',
                 'b',
                 'b.id_hiddenobject = a.id_hiddenobject AND b.is_test = 0 AND ' . HOTools::buildOrWhere($orWhere)
             );
 
             $query->where('b.id_hiddenobject IS NULL');
-            $query->where('('.$this->getRenewQuery().') < a.how_many');
+            $query->where('(' . $this->getRenewQuery() . ') < a.how_many');
         }
 
         $objects = \Db::getInstance()->executeS($query);
@@ -313,7 +317,7 @@ class ModuleHiddenObjects extends \Module
                             break;
                         }
                     } else {
-                        $product_cat = \Product::getProductCategories((int)\Tools::getValue('id_product'));
+                        $product_cat = \Product::getProductCategories((int) \Tools::getValue('id_product'));
                         if (!count(array_intersect($product_cat, $object['restriction_value']))) {
                             unset($objects[$key]);
                             break;
@@ -332,20 +336,20 @@ class ModuleHiddenObjects extends \Module
 
     public function getFoundedObjects()
     {
-        $id_shop = (int)\Context::getContext()->shop->id;
-        $id_lang = (int)\Context::getContext()->cookie->id_lang;
-        $id_customer = (int)\Context::getContext()->cookie->id_customer;
+        $id_shop = (int) \Context::getContext()->shop->id;
+        $id_lang = (int) \Context::getContext()->cookie->id_lang;
+        $id_customer = (int) \Context::getContext()->cookie->id_customer;
         $current_remote_address = ip2long(\Tools::getRemoteAddr());
 
         $query = new \DbQuery();
         $query->select('b.icon, cr.code, crl.name');
-        $query->from($this->getTable().'_founded', 'a');
+        $query->from($this->getTable() . '_founded', 'a');
         $query->innerJoin($this->getTable(), 'b', 'a.id_hiddenobject = b.id_hiddenobject');
         $query->innerJoin('cart_rule', 'cr', 'a.id_cart_rule = cr.id_cart_rule');
         $query->innerJoin('cart_rule_lang', 'crl', 'a.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) $id_lang);
 
         if ($id_customer) {
-            $orWhere = ['a.id_customer=' . (int)$id_customer, 'ip_address="' . pSQL($current_remote_address) . '"'];
+            $orWhere = ['a.id_customer=' . (int) $id_customer, 'ip_address="' . pSQL($current_remote_address) . '"'];
             $query->where(HOTools::buildOrWhere($orWhere));
         } else {
             $query->where('ip_address="' . pSQL($current_remote_address) . '"');
@@ -383,7 +387,7 @@ class ModuleHiddenObjects extends \Module
         }
 
         $this->context->controller->addJS($this->getLocalPath() . 'views/js/front.js');
-        $this->context->controller->addJS($this->getLocalPath() . 'assets/js/front.'.\Tools::strtolower($this->getPrefix()).'.js');
+        $this->context->controller->addJS($this->getLocalPath() . 'assets/js/front.' . \Tools::strtolower($this->getPrefix()) . '.js');
         $this->context->controller->addCSS($this->getLocalPath() . 'views/css/front.css');
         $token = \Tools::encrypt((int) $object['id_hiddenobject'] . '|' . date('YmdH') . '|' . $this->id);
 
@@ -395,16 +399,16 @@ class ModuleHiddenObjects extends \Module
         $icon_link = $this->context->link->getModuleLink(
             $this->name,
             'found',
-            ['id' => (int)$object['id_hiddenobject'], 'token' => $token,]
+            ['id' => (int) $object['id_hiddenobject'], 'token' => $token]
         );
 
         \Media::addJsDef([
-            \Tools::strtolower($this->getPrefix()).'HiddenObjectUrl' => $icon_url,
-            \Tools::strtolower($this->getPrefix()).'HiddenObjectSize' => (int)$object['size'],
-            \Tools::strtolower($this->getPrefix()).'HiddenObjectLink' => $icon_link,
-            \Tools::strtolower($this->getPrefix()).'HiddenObjectUseEffect' => (int)$object['use_effect'],
-            \Tools::strtolower($this->getPrefix()).'HiddenObjectSelector' => \Configuration::get($this->getPrefix() . 'HIDDENOBJECTS_SELECTOR'),
-            'hiddenObjectFancyboxError' => $this->l('An error occured. Please contact us if necessary.')
+            \Tools::strtolower($this->getPrefix()) . 'HiddenObjectUrl' => $icon_url,
+            \Tools::strtolower($this->getPrefix()) . 'HiddenObjectSize' => (int) $object['size'],
+            \Tools::strtolower($this->getPrefix()) . 'HiddenObjectLink' => $icon_link,
+            \Tools::strtolower($this->getPrefix()) . 'HiddenObjectUseEffect' => (int) $object['use_effect'],
+            \Tools::strtolower($this->getPrefix()) . 'HiddenObjectSelector' => \Configuration::get($this->getPrefix() . 'HIDDENOBJECTS_SELECTOR'),
+            'hiddenObjectFancyboxError' => $this->l('An error occured. Please contact us if necessary.'),
         ]);
     }
 
@@ -446,6 +450,7 @@ class ModuleHiddenObjects extends \Module
         }
 
         $this->smarty->assign('objects', $objects);
+
         return $this->display($this->getFileName(), 'views/templates/front/shopping-cart.tpl');
     }
 
@@ -461,7 +466,8 @@ class ModuleHiddenObjects extends \Module
         ];
     }
 
-    public function getRenewValues(): array {
+    public function getRenewValues(): array
+    {
         return [
             ['value' => 'none', 'label' => ''],
             ['value' => 'daily', 'label' => $this->l('Per day', 'modulehiddenobjects')],
@@ -470,7 +476,8 @@ class ModuleHiddenObjects extends \Module
         ];
     }
 
-    public function getRenewLabelByValue(string $v): string {
+    public function getRenewLabelByValue(string $v): string
+    {
         foreach ($this->getRenewValues() as $value) {
             if ($value['value'] == $v) {
                 return $value['label'];
@@ -480,7 +487,7 @@ class ModuleHiddenObjects extends \Module
 
     public function getLangTable(): string
     {
-        return $this->getTable().'_lang';
+        return $this->getTable() . '_lang';
     }
 
     public function getAssetsPath(): string
@@ -488,11 +495,12 @@ class ModuleHiddenObjects extends \Module
         return $this->getLocalPath() . 'vendor/adilis/hiddenobjects/src/Assets/';
     }
 
-    public function copyAssets(): bool {
+    public function copyAssets(): bool
+    {
         if (
-            (is_dir($this->getLocalPath() . 'views/') && !\Tools::deleteDirectory($this->getLocalPath() . 'views/')) ||
-            (is_dir($this->getLocalPath() . 'img/') && !\Tools::deleteDirectory($this->getLocalPath() . 'img/')) ||
-            (is_dir($this->getLocalPath() . 'translations/') && !\Tools::deleteDirectory($this->getLocalPath() . 'translations/'))
+            (is_dir($this->getLocalPath() . 'views/') && !\Tools::deleteDirectory($this->getLocalPath() . 'views/'))
+            || (is_dir($this->getLocalPath() . 'img/') && !\Tools::deleteDirectory($this->getLocalPath() . 'img/'))
+            || (is_dir($this->getLocalPath() . 'translations/') && !\Tools::deleteDirectory($this->getLocalPath() . 'translations/'))
         ) {
             return false;
         }
@@ -514,24 +522,94 @@ class ModuleHiddenObjects extends \Module
         );
 
         foreach ($files as $file) {
-            $content = \Tools::file_get_contents($this->getLocalPath().$file);
+            $content = \Tools::file_get_contents($this->getLocalPath() . $file);
             $content = str_replace('[[MODULENAME]]', $this->name, $content);
-            @file_put_contents($this->getLocalPath().$file, $content);
+            @file_put_contents($this->getLocalPath() . $file, $content);
         }
-
+        
         return true;
     }
 
-    public function getIconsPath(): string {
+    public function getIconsPath(): string
+    {
         return $this->getPathUri() . 'assets/icons/';
     }
 
-    public function getIconsDir(): string {
+    public function getIconsDir(): string
+    {
         return $this->getLocalPath() . 'assets/icons/';
     }
 
-    public function getClassName(): string {
+    public function getClassName(): string
+    {
         return $this->getPrefix() . 'HiddenObject';
     }
 
+    public function getDisplayName(): string
+    {
+        return sprintf($this->l('Hidden objects game : %s'), $this->getTheme());
+    }
+
+    public function getDescription(): string
+    {
+        return sprintf($this->l('Hide objects on your shop for %s'), $this->getTheme());
+    }
+
+    public function getDefaultTabName(): string
+    {
+        return sprintf('Hidden objects game : %s', $this->getTheme());
+    }
+
+    public function getFrenchTabName(): string
+    {
+        return sprintf('Jeu des objets cachés : %s', $this->getTheme());
+    }
+
+    protected static function loadUpgradeVersionList($module_name, $module_version, $registered_version)
+    {
+        $list = [];
+
+        $upgrade_path = _PS_MODULE_DIR_ . '' . $module_name . '/vendor/adilis/hiddenobjects/src/Upgrades/';
+        // Check if folder exist and it could be read
+        if (file_exists($upgrade_path) && ($files = scandir($upgrade_path, SCANDIR_SORT_NONE))) {
+            // Read each file name
+            foreach ($files as $file) {
+                if (!in_array($file, ['.', '..', '.svn', 'index.php']) && preg_match('/\.php$/', $file)) {
+                    $tab = explode('-', $file);
+
+                    if (!isset($tab[1])) {
+                        continue;
+                    }
+
+                    $file_version = basename($tab[1], '.php');
+                    // Compare version, if minor than actual, we need to upgrade the module
+                    if (count($tab) == 2 &&
+                        (\Tools::version_compare($file_version, $module_version, '<=') &&
+                            \Tools::version_compare($file_version, $registered_version, '>'))) {
+                        $list[] = [
+                            'file' => $upgrade_path . $file,
+                            'version' => $file_version,
+                            'upgrade_function' => [
+                                'upgrade_module_' . str_replace('.', '_', $file_version),
+                                'upgradeModule' . str_replace('.', '', $file_version), ],
+                        ];
+                    }
+                }
+            }
+        }
+
+        // No files upgrade, then upgrade succeed
+        if (count($list) == 0) {
+            static::$modules_cache[$module_name]['upgrade']['success'] = true;
+            \Module::upgradeModuleVersion($module_name, $module_version);
+        }
+
+        usort($list, 'ps_module_version_sort');
+
+        // Set the list to module cache
+        static::$modules_cache[$module_name]['upgrade']['upgrade_file_left'] = $list;
+        static::$modules_cache[$module_name]['upgrade']['available_upgrade'] = count($list);
+
+        return (bool) count($list);
+    }
 }

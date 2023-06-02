@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpMultipleClassDeclarationsInspection */
+<?php
+
+/** @noinspection PhpMultipleClassDeclarationsInspection */
 
 /**
  * 2016 Adilis
@@ -36,12 +38,12 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
         $this->display_footer = false;
 
         $founded_token = \Tools::getValue('token');
-        $id_hiddenobject = (int)\Tools::getValue('id');
+        $id_hiddenobject = (int) \Tools::getValue('id');
 
         $token = \Tools::encrypt((int) $id_hiddenobject . '|' . date('YmdH') . '|' . $this->module->id);
         if (
-            $token != $founded_token ||
-            !$id_hiddenobject
+            $token != $founded_token
+            || !$id_hiddenobject
         ) {
             $this->redirect_after = '404';
             $this->redirect();
@@ -67,7 +69,7 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
     {
         if ($this->hiddenobject->use_custom_cart_rule) {
             $this->cart_rule_code = $this->hiddenobject->custom_cart_rule_code;
-            $this->id_cart_rule = (int)\CartRule::getIdByCode($this->hiddenobject->custom_cart_rule_code);
+            $this->id_cart_rule = (int) \CartRule::getIdByCode($this->hiddenobject->custom_cart_rule_code);
         } else {
             $cart_rule_code = $this->module->getPrefix() . 'HO' . $this->hiddenobject->id . '-' . date('ymdHi') . \Tools::passwdGen(3);
             $this->cart_rule_code = \Tools::strtoupper($cart_rule_code);
@@ -102,16 +104,16 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
     public function processSaveResult(): bool
     {
         $datas_to_insert = [
-            'id_hiddenobject' => (int)$this->hiddenobject->id,
-            'id_guest' => (int)$this->context->cookie->id_guest,
-            'id_cart_rule' => (int)$this->id_cart_rule,
+            'id_hiddenobject' => (int) $this->hiddenobject->id,
+            'id_guest' => (int) $this->context->cookie->id_guest,
+            'id_cart_rule' => (int) $this->id_cart_rule,
             'ip_address' => \Tools::getRemoteAddr() ? ip2long(\Tools::getRemoteAddr()) : '',
             'is_test' => HOTools::isInMaintenance($this->module->getPrefix()) ? 1 : 0,
             'date' => date('Y-m-d H:i:s'),
         ];
 
         if (isset($this->context->customer) && \Validate::isLoadedObject($this->context->customer)) {
-            $datas_to_insert['id_customer'] = (int)$this->context->customer->id;
+            $datas_to_insert['id_customer'] = (int) $this->context->customer->id;
         }
 
         return \Db::getInstance()->insert(
@@ -131,7 +133,7 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
             $cart_rule->id_customer = (int) $this->context->customer->id;
         }
         $cart_rule->date_from = date('Y-m-d H:i:s');
-        $cart_rule->date_to = date('Y-m-d H:i:s', strtotime('+' . (int)$this->hiddenobject->cart_rule_date_to . ' days'));
+        $cart_rule->date_to = date('Y-m-d H:i:s', strtotime('+' . (int) $this->hiddenobject->cart_rule_date_to . ' days'));
         $cart_rule->name = $this->hiddenobject->name;
         $cart_rule->code = $this->cart_rule_code;
         $cart_rule->minimum_amount = (float) $this->hiddenobject->minimum_amount;
@@ -150,6 +152,7 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
 
         if ($cart_rule->add()) {
             $this->saveCartRuleRestrictions((int) $cart_rule->id);
+
             return $cart_rule->id;
         }
 
@@ -161,7 +164,7 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
      */
     protected function saveCartRuleRestrictions($id_cart_rule)
     {
-        if ((bool)$this->hiddenobject->cart_rule_restriction && (int)$id_cart_rule) {
+        if ((bool) $this->hiddenobject->cart_rule_restriction && (int) $id_cart_rule) {
             $query = new \DbQuery();
             $query->select('cr.id_cart_rule');
             $query->from('cart_rule', 'cr');
@@ -179,7 +182,7 @@ class HiddenObjectsFoundModuleFrontController extends \ModuleFrontController
             foreach ($cart_rules_to_combine as $cart_rule_to_combine) {
                 $values[] = [
                     'id_cart_rule_1' => (int) $id_cart_rule,
-                    'id_cart_rule_2' => (int) $cart_rule_to_combine['id_cart_rule']
+                    'id_cart_rule_2' => (int) $cart_rule_to_combine['id_cart_rule'],
                 ];
             }
             \Db::getInstance()->insert('cart_rule_combination', $values);

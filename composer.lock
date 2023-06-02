@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sas-adilis/hiddenobjects.git",
-                "reference": "9522ed4a355f444574df5311774f3065183913a0"
+                "reference": "1aae8ff8de547837a5c8eecb43314b10aeecf36b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sas-adilis/hiddenobjects/zipball/9522ed4a355f444574df5311774f3065183913a0",
-                "reference": "9522ed4a355f444574df5311774f3065183913a0",
+                "url": "https://api.github.com/repos/sas-adilis/hiddenobjects/zipball/1aae8ff8de547837a5c8eecb43314b10aeecf36b",
+                "reference": "1aae8ff8de547837a5c8eecb43314b10aeecf36b",
                 "shasum": ""
             },
             "require-dev": {
@@ -41,7 +41,7 @@
                 "issues": "https://github.com/sas-adilis/hiddenobjects/issues",
                 "source": "https://github.com/sas-adilis/hiddenobjects/tree/main"
             },
-            "time": "2023-05-26T08:06:00+00:00"
+            "time": "2023-06-02T14:38:41+00:00"
         }
     ],
     "packages-dev": [],
