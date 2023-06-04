@@ -16,6 +16,14 @@ if (file_exists(dirname(__FILE__) . '/vendor/autoload.php')) {
 
 class HalloweenHiddenObjects extends ModuleHiddenObjects implements ModuleHiddenObjectsInterface
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->name = 'halloweenhiddenobjects';
+        $this->module_key = 'b4a4b0da667f4a0f929b0f09e9d803ac';
+        $this->version = '2.0.0';
+    }
+
     public function getTable(): string
     {
         return 'hiddenobjects_hw';
@@ -24,16 +32,6 @@ class HalloweenHiddenObjects extends ModuleHiddenObjects implements ModuleHidden
     public function getPrefix(): string
     {
         return 'HW';
-    }
-
-    public function getName(): string
-    {
-        return 'halloweenhiddenobjects';
-    }
-
-    public function getModuleKey(): string
-    {
-        return 'b4a4b0da667f4a0f929b0f09e9d803ac';
     }
 
     public function getTheme(): string
