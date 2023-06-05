@@ -18,10 +18,10 @@ class HalloweenHiddenObjects extends ModuleHiddenObjects implements ModuleHidden
 {
     function __construct()
     {
-        parent::__construct();
         $this->name = 'halloweenhiddenobjects';
         $this->module_key = 'b4a4b0da667f4a0f929b0f09e9d803ac';
         $this->version = '2.0.0';
+        parent::__construct();
     }
 
     public function getTable(): string
